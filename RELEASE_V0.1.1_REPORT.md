@@ -4,6 +4,8 @@
 
 AccessAid Lite v0.1.1 is a small quality release focused on clearer findings, more useful reports, and practical human-review guidance while preserving the privacy-first scope.
 
+Release URL: https://github.com/a78c7/accessaid-lite/releases/tag/v0.1.1
+
 ## New Features
 
 - Stable rule IDs.
@@ -37,19 +39,29 @@ Ran 32 tests
 OK
 ```
 
+Release ZIP tests passed from `/tmp/accessaid-lite-v0.1.1-release-check/unzipped`:
+
+```text
+python3 -m unittest discover -s tests
+Ran 32 tests
+OK
+```
+
 ## Packaging Result
 
 Passed.
 
-```text
-dist/accessaid-lite-0.1.1.zip
-```
+- Local package: `dist/accessaid-lite-0.1.1.zip`
+- GitHub asset: `accessaid-lite-0.1.1.zip`
+- GitHub asset size: `45529` bytes
+- GitHub asset digest: `sha256:a4a9b666d353cc65c2f91b0e1c6b17476b3ee49344044858ebcf8bcbc8d431bd`
 
 ## Release Asset Details
 
-Pending GitHub release asset upload.
-
-Local package is ready for GitHub Release upload. Final asset size and digest are recorded after upload.
+- Release tag: `v0.1.1`
+- Tag commit: `2e22592cd36805a6e5ee8496964160ace6053b53`
+- Asset URL: https://github.com/a78c7/accessaid-lite/releases/download/v0.1.1/accessaid-lite-0.1.1.zip
+- Post-release ZIP verification: passed
 
 ## Known Limitations
 
@@ -70,6 +82,7 @@ Local package is ready for GitHub Release upload. Final asset size and digest ar
 - Does not add external APIs.
 - Does not handle KYC, payment, withdrawal, tax, or payout flows.
 - Does not enable Sponsors.
+- `.github/FUNDING.yml` exists: no.
 
 ## Manual Checks Needed
 
