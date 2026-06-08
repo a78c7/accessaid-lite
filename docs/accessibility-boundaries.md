@@ -35,3 +35,5 @@ Human review is still required for:
 ## Privacy Boundary
 
 The tool analyzes only user-provided URL, HTML, or text. It does not upload page content, read cookies, read tokens, access keychains, access password managers, log in, bypass authentication, submit forms, collect analytics, or call external APIs.
+
+URL mode fetches only the user-provided public URL with Python `urllib`, a timeout, and a maximum byte limit. It does not execute JavaScript, does not use browser state, and does not authenticate.

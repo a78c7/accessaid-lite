@@ -22,7 +22,7 @@ It does not:
 - Collect analytics.
 - Call external APIs.
 
-URL mode uses Python `urllib` with a timeout and maximum response size.
+URL mode uses Python `urllib` with a timeout and maximum response size. It fetches only the user-provided URL and does not use browser state, cookies, login sessions, JavaScript, or form submission.
 
 ## Reporting A Vulnerability
 
@@ -30,4 +30,4 @@ Open a GitHub issue with a clear description and reproduction steps. Do not incl
 
 ## Scope
 
-Security reports should focus on the CLI, packaging script, documentation, and project workflow. This tool does not provide legal, medical, tax, or compliance advice.
+Security reports should focus on the CLI, packaging script, documentation, and project workflow. This tool does not provide legal, medical, tax, or compliance advice, and it is not a full WCAG audit.

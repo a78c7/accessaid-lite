@@ -4,7 +4,7 @@
 
 AccessAid Lite is a lightweight, privacy-first accessibility pre-check CLI for small nonprofits, schools, community groups, and open-source projects.
 
-It helps teams quickly find common accessibility issues in public HTML pages before requesting deeper human review.
+It helps teams quickly find common static accessibility issues in public HTML pages before requesting deeper human review.
 
 ## Target Users
 
@@ -16,7 +16,7 @@ It helps teams quickly find common accessibility issues in public HTML pages bef
 
 ## Problem Solved
 
-Small organizations often lack budget or staff for formal accessibility audits. AccessAid Lite gives them a practical first pass that can catch common issues, prioritize fixes, and prepare better notes for human reviewers.
+Small organizations often lack budget or staff for formal accessibility audits. AccessAid Lite gives them a practical first pass that can catch common issues, prioritize fixes, and prepare clearer notes for human reviewers.
 
 ## Feature List
 
@@ -24,16 +24,31 @@ Small organizations often lack budget or staff for formal accessibility audits. 
 - Local HTML, inline text, and public URL input.
 - Markdown and JSON report output.
 - Optional `--output` file writing.
-- Configurable thresholds and rule behavior.
+- Configurable thresholds and severity overrides.
+- Stable rule IDs.
+- Location and element hints.
+- Remediation guidance per finding.
 - Standard-library HTML parsing.
 - URL fetch timeout and byte limit.
 - No external dependencies.
 - Unit tests and CI workflow.
 - Release packaging script.
 
-## Release Notes
+## v0.1.1 Release Notes
 
-Version `0.1.0` is the initial open-source release. It includes preliminary checks for titles, language, image alt attributes, headings, links, buttons, forms, iframes, landmarks, static keyboard hints, ARIA hints, and basic readability.
+Version `0.1.1` improves report usefulness without changing the privacy-first scope.
+
+Highlights:
+
+- Stable `rule_id` values for findings.
+- Structured location and element hints where available.
+- Remediation guidance in Markdown and JSON.
+- Severity overrides for local triage.
+- Markdown severity summary table.
+- Improved URL fetch error messages.
+- New ARIA, keyboard-focus, and image-heavy examples.
+- Human review checklist and automated-vs-human-review docs.
+- Expanded unittest coverage.
 
 ## Suggested GitHub Repo Description
 
@@ -51,6 +66,8 @@ Privacy-first preliminary accessibility checks for small websites and nonprofits
 - open-source
 - public-good
 
-## Positioning Boundary
+## Limitations
 
 AccessAid Lite is not a full WCAG audit, does not guarantee legal compliance, and does not provide legal or medical advice. Human review is still required.
+
+The tool does not upload page content, read cookies or tokens, log in, execute JavaScript, submit forms, collect analytics, or add paid services.

@@ -5,6 +5,14 @@
 - PASS
 - Exit code: 0
 
+## Summary Table
+
+| Severity | Count |
+| --- | ---: |
+| Blockers | 0 |
+| Warnings | 0 |
+| Info | 0 |
+
 ## Page Summary
 
 - source: examples/good-page.html

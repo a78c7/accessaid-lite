@@ -35,3 +35,29 @@ python3 accessaid_lite.py check --html page.html --config accessaid-lite.config.
 `timeout_seconds`: URL fetch timeout. Default: `20`.
 
 `max_html_bytes`: Maximum bytes read from a URL response. Default: `2000000`.
+
+`severity_overrides`: Optional object mapping `rule_id` values to `blocker`, `warning`, or `info`. Default: `{}`.
+
+## Severity Overrides
+
+Example:
+
+```json
+{
+  "severity_overrides": {
+    "img_alt_missing": "warning",
+    "iframe_title_missing": "blocker",
+    "link_generic_text": "info"
+  }
+}
+```
+
+Allowed override severities:
+
+- `blocker`
+- `warning`
+- `info`
+
+Unknown rule IDs and invalid severity values are ignored. Overrides do not hide findings in v0.1.1. They also do not make a page compliant or replace human review.
+
+Use overrides only when your organization has a documented triage policy. This tool is still a preliminary check, not a full WCAG audit or legal compliance tool.

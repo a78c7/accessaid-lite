@@ -6,8 +6,11 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import socket
 import sys
 import textwrap
+import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
@@ -15,7 +18,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 DISCLAIMER = "This is a preliminary accessibility check, not a full WCAG audit."
 
 DEFAULT_CONFIG: Dict[str, Any] = {
@@ -30,7 +33,10 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "ignore_hidden_inputs": True,
     "timeout_seconds": 20,
     "max_html_bytes": 2_000_000,
+    "severity_overrides": {},
 }
+
+ALLOWED_SEVERITIES = {"blocker", "warning", "info"}
 
 GENERIC_LINK_TEXT = {
     "click here",
@@ -222,26 +228,58 @@ def parse_int(value: Optional[str]) -> Optional[int]:
         return None
 
 
-def location(record: ElementRecord) -> str:
-    return f"line {record.line}, column {record.col}"
+class FetchError(ValueError):
+    """A user-facing URL fetch failure."""
+
+
+def location(record: ElementRecord) -> Optional[Dict[str, Any]]:
+    if record.line <= 0:
+        return None
+    return {"line": record.line, "column": record.col, "element": record.tag}
+
+
+def element_summary(record: ElementRecord) -> str:
+    parts = [record.tag]
+    for attr in ("id", "name", "type", "role"):
+        value = clean_attr(record.attrs.get(attr))
+        if value:
+            if attr == "id":
+                parts[0] = f"{parts[0]}#{safe_hint(value)}"
+            else:
+                parts.append(f'{attr}="{safe_hint(value)}"')
+    for attr in ("href", "src"):
+        value = clean_attr(record.attrs.get(attr))
+        if value:
+            parts.append(f'{attr}="{safe_hint(value)}"')
+    return f"<{' '.join(parts)}>"
+
+
+def safe_hint(value: str, limit: int = 80) -> str:
+    cleaned = normalize_text(value).replace('"', "'")
+    return cleaned if len(cleaned) <= limit else cleaned[: limit - 1] + "…"
 
 
 def finding(
     severity: str,
-    rule: str,
+    rule_id: str,
     message: str,
-    help_text: str,
+    remediation: str,
     record: Optional[ElementRecord] = None,
-) -> Dict[str, str]:
-    item = {
+) -> Dict[str, Any]:
+    item: Dict[str, Any] = {
+        "rule_id": rule_id,
         "severity": severity,
-        "rule": rule,
         "message": message,
-        "help": help_text,
+        "remediation": remediation,
+        # Backward-compatible aliases for older report consumers.
+        "rule": rule_id,
+        "help": remediation,
     }
     if record is not None:
-        item["location"] = location(record)
-        item["element"] = record.tag
+        loc = location(record)
+        if loc is not None:
+            item["location"] = loc
+        item["element"] = element_summary(record)
     return item
 
 
@@ -257,11 +295,18 @@ def analyze_html(html: str, source: str = "text", config: Optional[Dict[str, Any
     if config:
         cfg.update(config)
     page = parse_html(html, source)
-    blockers: List[Dict[str, str]] = []
-    warnings: List[Dict[str, str]] = []
-    info: List[Dict[str, str]] = []
+    blockers: List[Dict[str, Any]] = []
+    warnings: List[Dict[str, Any]] = []
+    info: List[Dict[str, Any]] = []
 
-    def add(item: Dict[str, str]) -> None:
+    severity_overrides = cfg.get("severity_overrides", {})
+    if not isinstance(severity_overrides, dict):
+        severity_overrides = {}
+
+    def add(item: Dict[str, Any]) -> None:
+        override = severity_overrides.get(item["rule_id"])
+        if isinstance(override, str) and override.lower() in ALLOWED_SEVERITIES:
+            item["severity"] = override.lower()
         if item["severity"] == "blocker":
             blockers.append(item)
         elif item["severity"] == "warning":
@@ -319,9 +364,9 @@ def check_title(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
         add(
             finding(
                 "blocker",
-                "page_title",
+                "page_title_missing",
                 "The page does not include a <title> element.",
-                "Add a concise, descriptive <title> in the document <head>.",
+                "Add a concise, descriptive <title> element.",
             )
         )
         return
@@ -330,16 +375,16 @@ def check_title(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
         add(
             finding(
                 "blocker",
-                "page_title",
+                "page_title_empty",
                 "The page title is empty.",
-                "Use a title that identifies the page purpose.",
+                "Use a concise title that identifies the page purpose.",
             )
         )
     elif len(title) > int(cfg["max_title_length"]):
         add(
             finding(
                 "warning",
-                "page_title",
+                "page_title_too_long",
                 f"The page title is longer than {cfg['max_title_length']} characters.",
                 "Shorten the title so it is easier to scan in browser tabs and assistive technology.",
             )
@@ -351,7 +396,7 @@ def check_language(page: ParsedPage, add) -> None:
         add(
             finding(
                 "warning",
-                "html_language",
+                "html_lang_missing",
                 "The document does not include an <html> element.",
                 "Add <html lang=\"...\"> with the primary page language.",
             )
@@ -360,7 +405,7 @@ def check_language(page: ParsedPage, add) -> None:
         add(
             finding(
                 "warning",
-                "html_language",
+                "html_lang_empty",
                 "The <html> element is missing a non-empty lang attribute.",
                 "Set lang to the primary page language, such as en or zh-CN.",
             )
@@ -374,9 +419,9 @@ def check_images(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
             add(
                 finding(
                     severity,
-                    "image_alt_text",
+                    "img_alt_missing",
                     "An <img> element is missing an alt attribute.",
-                    "Add useful alt text, or alt=\"\" only when the image is decorative.",
+                    "Add an alt attribute. Use meaningful text for informative images, or alt=\"\" only for decorative images.",
                     image,
                 )
             )
@@ -384,7 +429,7 @@ def check_images(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
             add(
                 finding(
                     "info",
-                    "decorative_or_empty_alt",
+                    "img_alt_empty",
                     "An image uses empty alt text and should be manually confirmed as decorative.",
                     "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
                     image,
@@ -397,7 +442,7 @@ def check_headings(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
         add(
             finding(
                 "warning",
-                "heading_structure",
+                "headings_missing",
                 "The page has no heading elements.",
                 "Add headings to describe page sections and support navigation.",
             )
@@ -409,7 +454,7 @@ def check_headings(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
         add(
             finding(
                 "warning",
-                "heading_structure",
+                "h1_missing",
                 "The page does not include an h1 heading.",
                 "Add one h1 that describes the main page topic.",
             )
@@ -418,7 +463,7 @@ def check_headings(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
         add(
             finding(
                 "warning",
-                "heading_structure",
+                "multiple_h1",
                 "The page includes multiple h1 headings.",
                 "Confirm the heading outline is intentional and easy to navigate.",
             )
@@ -432,7 +477,7 @@ def check_headings(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                 add(
                     finding(
                         "warning",
-                        "heading_structure",
+                        "heading_level_skip",
                         f"Heading level jumps from h{previous_level} to h{current_level}.",
                         "Avoid skipping heading levels when moving into subsections.",
                         heading,
@@ -449,7 +494,7 @@ def check_links(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
             add(
                 finding(
                     "warning",
-                    "link_text",
+                    "link_empty_text",
                     "A link has no readable text, aria-label, or title.",
                     "Give every link text that explains its destination or action.",
                     link,
@@ -459,9 +504,9 @@ def check_links(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
             add(
                 finding(
                     "warning",
-                    "link_text",
+                    "link_generic_text",
                     f"Link text '{text}' is generic.",
-                    "Use link text that describes the target, such as 'Download the volunteer guide'.",
+                    "Replace generic link text with text that describes the destination or action.",
                     link,
                 )
             )
@@ -469,7 +514,7 @@ def check_links(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
             add(
                 finding(
                     "warning",
-                    "link_target",
+                    "link_empty_href",
                     "A link has an empty or placeholder href.",
                     "Use a meaningful href or replace the link with a button when it triggers an action.",
                     link,
@@ -484,7 +529,7 @@ def check_buttons(page: ParsedPage, add) -> None:
             add(
                 finding(
                     "blocker",
-                    "button_accessible_text",
+                    "button_missing_accessible_text",
                     "A <button> has no visible text, aria-label, or title.",
                     "Add button text or an accessible label that describes the action.",
                     button,
@@ -513,9 +558,9 @@ def check_form_labels(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
             add(
                 finding(
                     severity,
-                    "form_labels",
+                    "form_control_missing_label",
                     f"A <{control.tag}> control does not appear to have an associated label.",
-                    "Associate a <label for=\"...\"> with the control or add an appropriate aria-label.",
+                    "Add a visible label connected with for/id, or provide aria-label/aria-labelledby when a visible label is not possible.",
                     control,
                 )
             )
@@ -527,7 +572,7 @@ def check_iframes(page: ParsedPage, add) -> None:
             add(
                 finding(
                     "warning",
-                    "iframe_title",
+                    "iframe_title_missing",
                     "An <iframe> is missing a title attribute.",
                     "Add a title that describes the embedded content.",
                     iframe,
@@ -540,7 +585,7 @@ def check_landmarks(page: ParsedPage, add) -> None:
         add(
             finding(
                 "warning",
-                "document_landmarks",
+                "main_landmark_missing",
                 "The page does not include a main landmark.",
                 "Add <main> or role=\"main\" around the primary content.",
             )
@@ -550,7 +595,7 @@ def check_landmarks(page: ParsedPage, add) -> None:
             add(
                 finding(
                     "warning",
-                    "document_landmarks",
+                    "supporting_landmark_missing",
                     f"The page does not include a {tag} landmark.",
                     f"Consider adding a <{tag}> landmark if this page has {tag}-type content.",
                 )
@@ -563,7 +608,7 @@ def check_keyboard_hints(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
             add(
                 finding(
                     "warning",
-                    "keyboard_focus_static_hint",
+                    "positive_tabindex",
                     "An element uses tabindex greater than 0.",
                     "Avoid positive tabindex because it can create confusing focus order.",
                     record,
@@ -573,7 +618,7 @@ def check_keyboard_hints(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
         add(
             finding(
                 "warning",
-                "keyboard_focus_static_hint",
+                "onclick_noninteractive",
                 f"A non-link, non-button <{record.tag}> has an onclick handler.",
                 "Use a real button or link for interactive controls, then test keyboard access manually.",
                 record,
@@ -586,7 +631,7 @@ def check_aria_hints(page: ParsedPage, add) -> None:
         add(
             finding(
                 "warning",
-                "aria_simple_hint",
+                "aria_label_empty",
                 "An aria-label attribute is empty.",
                 "Remove the empty aria-label or provide meaningful accessible text.",
                 record,
@@ -596,7 +641,7 @@ def check_aria_hints(page: ParsedPage, add) -> None:
         add(
             finding(
                 "warning",
-                "aria_simple_hint",
+                "role_button_without_tabindex",
                 "An element with role=\"button\" is missing tabindex.",
                 "Prefer a real <button>; otherwise make the custom control focusable and keyboard operable.",
                 record,
@@ -606,7 +651,7 @@ def check_aria_hints(page: ParsedPage, add) -> None:
         add(
             finding(
                 "blocker",
-                "aria_hidden_critical",
+                "aria_hidden_on_body_or_main",
                 "aria-hidden=\"true\" is present on body/main content.",
                 "Do not hide the main document or primary content from assistive technology.",
                 record,
@@ -620,7 +665,7 @@ def check_readability(page: ParsedPage, add) -> None:
         add(
             finding(
                 "warning",
-                "basic_text_readability",
+                "low_text_content",
                 "The page has very little visible text.",
                 "Confirm users can understand the page without relying only on images or layout.",
             )
@@ -629,7 +674,7 @@ def check_readability(page: ParsedPage, add) -> None:
         add(
             finding(
                 "warning",
-                "basic_text_readability",
+                "image_heavy_without_text",
                 "The document appears to rely on images with almost no readable text.",
                 "Add meaningful text content and manually review image alternatives.",
             )
@@ -645,6 +690,14 @@ def render_markdown_report(report: Dict[str, Any]) -> str:
         "",
         f"- {report['result'].upper()}",
         f"- Exit code: {report['exit_code']}",
+        "",
+        "## Summary Table",
+        "",
+        "| Severity | Count |",
+        "| --- | ---: |",
+        f"| Blockers | {len(report['blockers'])} |",
+        f"| Warnings | {len(report['warnings'])} |",
+        f"| Info | {len(report['info'])} |",
         "",
         "## Page Summary",
         "",
@@ -680,15 +733,33 @@ def render_markdown_report(report: Dict[str, Any]) -> str:
     return "\n".join(sections)
 
 
-def render_findings(findings: Iterable[Dict[str, str]]) -> str:
+def render_findings(findings: Iterable[Dict[str, Any]]) -> str:
     items = list(findings)
     if not items:
         return "- None"
     lines = []
     for item in items:
-        loc = f" ({item['location']})" if "location" in item else ""
-        lines.append(f"- **{item['rule']}**{loc}: {item['message']}")
+        loc = format_location(item)
+        element = f" {item['element']}" if item.get("element") and not loc else ""
+        loc_text = f" ({loc})" if loc else element
+        lines.append(
+            f"- **{item['rule_id']}**{loc_text}: {item['message']} "
+            f"Remediation: {item['remediation']}"
+        )
     return "\n".join(lines)
+
+
+def format_location(item: Dict[str, Any]) -> str:
+    loc = item.get("location")
+    if not isinstance(loc, dict):
+        return ""
+    line = loc.get("line")
+    column = loc.get("column")
+    element = item.get("element") or (f"<{loc.get('element')}>" if loc.get("element") else "")
+    if line is None:
+        return element
+    location_text = f"Line {line}, column {column}"
+    return f"{location_text}, {element}" if element else location_text
 
 
 def render_suggested_fixes(report: Dict[str, Any]) -> str:
@@ -698,16 +769,21 @@ def render_suggested_fixes(report: Dict[str, Any]) -> str:
     seen = set()
     lines = []
     for item in findings:
-        help_text = item.get("help", "")
-        if help_text and help_text not in seen:
-            lines.append(f"- {help_text}")
-            seen.add(help_text)
+        remediation = item.get("remediation", "")
+        rule_id = item.get("rule_id", "finding")
+        key = (rule_id, remediation)
+        if remediation and key not in seen:
+            lines.append(f"- **{rule_id}**: {remediation}")
+            seen.add(key)
     return "\n".join(lines) if lines else "- Review each finding manually."
 
 
 def read_html_from_url(url: str, config: Dict[str, Any]) -> str:
     timeout = int(config.get("timeout_seconds", DEFAULT_CONFIG["timeout_seconds"]))
     max_bytes = int(config.get("max_html_bytes", DEFAULT_CONFIG["max_html_bytes"]))
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise FetchError("Invalid URL. Provide a full public http:// or https:// URL.")
     request = urllib.request.Request(
         url,
         headers={
@@ -716,12 +792,20 @@ def read_html_from_url(url: str, config: Dict[str, Any]) -> str:
         },
         method="GET",
     )
-    with urllib.request.urlopen(request, timeout=timeout) as response:
-        content = response.read(max_bytes + 1)
-        if len(content) > max_bytes:
-            raise ValueError(f"URL response exceeds max_html_bytes ({max_bytes}).")
-        charset = response.headers.get_content_charset() or "utf-8"
-        return content.decode(charset, errors="replace")
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            content = response.read(max_bytes + 1)
+            if len(content) > max_bytes:
+                raise FetchError(f"URL response exceeds max_html_bytes ({max_bytes}).")
+            charset = response.headers.get_content_charset() or "utf-8"
+            return content.decode(charset, errors="replace")
+    except urllib.error.HTTPError as exc:
+        raise FetchError(f"Could not fetch URL: HTTP {exc.code} {exc.reason}.") from exc
+    except urllib.error.URLError as exc:
+        reason = getattr(exc, "reason", exc)
+        raise FetchError(f"Could not fetch URL: {reason}.") from exc
+    except (TimeoutError, socket.timeout) as exc:
+        raise FetchError(f"Could not fetch URL before timeout_seconds ({timeout}).") from exc
 
 
 def load_config(path: Optional[str]) -> Dict[str, Any]:

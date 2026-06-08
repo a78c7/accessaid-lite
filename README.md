@@ -6,6 +6,16 @@ It helps teams find common HTML accessibility issues early, before they ask a de
 
 AccessAid Lite is not a full WCAG audit. Automated checks cannot determine all accessibility issues. Human review is still required.
 
+## v0.1.1 Improvements
+
+- Stable `rule_id` values for every finding.
+- Line, column, and short element hints when the parser can identify them.
+- Remediation guidance on every finding.
+- Configurable severity overrides that can move a finding between `blocker`, `warning`, and `info`.
+- Markdown reports with a severity summary table.
+- JSON findings with `rule_id`, `severity`, `message`, `remediation`, `location`, and `element` fields.
+- Clearer URL fetch errors while keeping URL mode privacy-first.
+
 ## Who It Helps
 
 - Small nonprofits with limited technical support.
@@ -58,6 +68,12 @@ Write JSON output:
 python3 accessaid_lite.py check --html examples/missing-alt.html --format json
 ```
 
+Use severity overrides:
+
+```bash
+python3 accessaid_lite.py check --html examples/missing-alt.html --config examples/severity-overrides.config.json --format json
+```
+
 Check a public URL:
 
 ```bash
@@ -95,6 +111,18 @@ Exit codes:
 
 Reports include page summary, blockers, warnings, info, suggested fixes, and human review notes.
 
+Markdown reports also include:
+
+```markdown
+| Severity | Count |
+| --- | ---: |
+| Blockers | 1 |
+| Warnings | 2 |
+| Info | 0 |
+```
+
+Finding lines include the `rule_id`, message, location when available, and remediation guidance. JSON reports include the same finding details in structured fields.
+
 ## What It Checks
 
 - Page title presence, emptiness, and length.
@@ -110,6 +138,8 @@ Reports include page summary, blockers, warnings, info, suggested fixes, and hum
 - Simple ARIA misuse hints.
 - Basic text readability hints.
 
+Each check has a stable rule ID. See [docs/checks-reference.md](docs/checks-reference.md).
+
 ## What It Does Not Check
 
 - Full WCAG conformance.
@@ -121,6 +151,8 @@ Reports include page summary, blockers, warnings, info, suggested fixes, and hum
 - JavaScript-rendered states.
 - Authenticated pages.
 - Payment, KYC, withdrawal, or account flows.
+- Legal advice.
+- Medical advice.
 
 ## Limitations
 
@@ -152,6 +184,7 @@ AccessAid Lite is privacy-first:
 - The tool does not call external APIs.
 
 URL mode uses Python `urllib` to fetch only the user-provided public URL with a timeout and byte limit.
+It does not read browser cookies, does not log in, does not submit forms, and does not execute JavaScript.
 
 ## Contributing
 

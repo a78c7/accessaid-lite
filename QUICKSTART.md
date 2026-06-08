@@ -34,13 +34,25 @@ URL mode fetches only the URL you provide. It does not read cookies, log in, exe
 Open `examples/sample-report.md` and review:
 
 - Result.
+- Severity summary table.
 - Page summary.
 - Blockers.
 - Warnings.
 - Info.
 - Suggested fixes.
 - Human review notes.
+- Location hints such as `Line 12, column 4, <img>`.
 
-## 6. Share Findings
+## 6. Try Severity Overrides
+
+```bash
+python3 accessaid_lite.py check --html examples/missing-alt.html --config examples/severity-overrides.config.json --format json
+```
+
+Severity overrides can move a rule to `blocker`, `warning`, or `info`. They do not hide findings and do not make a page compliant.
+
+## 7. Share Findings
 
 Send blockers and warnings to the website maintainer. Make clear that this is a preliminary accessibility check, not a full WCAG audit, and that human review is still required.
+
+Ask a human reviewer to sanity-check the rule wording, remediation, and actual user impact before making accessibility claims.

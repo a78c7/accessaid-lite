@@ -4,7 +4,7 @@ This roadmap keeps AccessAid Lite practical, privacy-first, and clear about its 
 
 AccessAid Lite is not a full WCAG audit. Automated checks cannot determine all accessibility issues, and human review is still required.
 
-## v0.1.1 Candidate Backlog
+## v0.1.1 Completed
 
 - Improve finding locations with line and element hints where possible.
 - Add more example pages for common nonprofit and school websites.
@@ -18,6 +18,16 @@ AccessAid Lite is not a full WCAG audit. Automated checks cannot determine all a
 - Add comparison table: automated preliminary check vs human review vs full audit.
 - Keep the standard-library-only approach unless a strong reason exists.
 - Preserve privacy-first boundaries.
+
+## v0.1.2 Candidate Backlog
+
+- Add optional SARIF-like JSON export without changing privacy boundaries.
+- Add more sample pages for donation, event registration, school program, and open-source docs pages.
+- Add clearer examples for empty alt text decisions.
+- Add stricter config validation messages while avoiding noise.
+- Add more tests for URL fetch errors with mocked standard-library handlers.
+- Add a short maintainer guide for evaluating new rules.
+- Review GitHub Actions Node runtime warnings and update actions versions if needed.
 
 ## v0.1.1 Must Not Do
 

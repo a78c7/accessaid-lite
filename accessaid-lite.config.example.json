@@ -9,5 +9,6 @@
   "warn_positive_tabindex": true,
   "ignore_hidden_inputs": true,
   "timeout_seconds": 20,
-  "max_html_bytes": 2000000
+  "max_html_bytes": 2000000,
+  "severity_overrides": {}
 }

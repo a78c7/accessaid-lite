@@ -1,0 +1,7 @@
+{
+  "severity_overrides": {
+    "img_alt_missing": "warning",
+    "iframe_title_missing": "blocker",
+    "link_generic_text": "info"
+  }
+}
