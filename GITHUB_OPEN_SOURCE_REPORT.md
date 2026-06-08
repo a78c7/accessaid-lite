@@ -100,3 +100,17 @@ AccessAid Lite helps nonprofits, schools, community groups, and open-source proj
 - Download and open the v0.1.1 release ZIP manually once.
 - Ask a human accessibility reviewer to sanity-check rule wording, severities, remediation text, and limitations.
 - Try the CLI on one real public nonprofit, school, or community page and review findings manually.
+
+## 13. Post-v0.1.1 Adoption Readiness Note
+
+Adoption-readiness materials were added after v0.1.1 without publishing a new release or moving existing tags.
+
+Added locally and pushed to `main`:
+
+- Public presentation QA.
+- Real-world pilot guide.
+- Maintainer triage guide.
+- Outreach templates.
+- v0.1.2 planning drafts as Markdown files.
+
+This did not change the v0.1.1 release, did not create a v0.1.2 tag, and did not create GitHub issues.

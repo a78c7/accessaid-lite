@@ -29,6 +29,27 @@ AccessAid Lite is not a full WCAG audit. Automated checks cannot determine all a
 - Add a short maintainer guide for evaluating new rules.
 - Review GitHub Actions Node runtime warnings and update actions versions if needed.
 
+## Adoption Readiness Completed After v0.1.1
+
+- Added public presentation QA.
+- Added real-world pilot guide.
+- Added maintainer triage guide.
+- Added outreach templates.
+- Added local v0.1.2 planning issue drafts.
+- Added docs index.
+
+## v0.1.2 Planning Drafts
+
+- [Line location improvements](planning/v0.1.2/issue-line-location-improvements.md)
+- [Rule remediation copy review](planning/v0.1.2/issue-rule-remediation-copy-review.md)
+- [Config severity docs](planning/v0.1.2/issue-config-severity-docs.md)
+- [False positive review](planning/v0.1.2/issue-false-positive-review.md)
+- [HTML parser edge cases](planning/v0.1.2/issue-html-parser-edge-cases.md)
+- [Human review workflow](planning/v0.1.2/issue-human-review-workflow.md)
+- [Nonprofit example pack](planning/v0.1.2/issue-nonprofit-example-pack.md)
+
+These are future-work drafts only. They are not a release, not GitHub issues, and not a commitment to expand AccessAid Lite into a full WCAG audit.
+
 ## v0.1.1 Must Not Do
 
 - v0.1.1 must not turn the project into a full WCAG audit.

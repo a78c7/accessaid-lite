@@ -169,6 +169,14 @@ Automated checks cannot determine all accessibility issues. AccessAid Lite can f
 5. Ask real users or accessibility reviewers to test the page.
 6. Repeat monthly or before major campaigns.
 
+## Adoption Materials
+
+- [Real-world pilot guide](docs/real-world-pilot-guide.md)
+- [Maintainer triage guide](docs/maintainer-triage-guide.md)
+- [Launch post template](outreach/launch-post.md)
+- [Nonprofit email template](outreach/nonprofit-email.md)
+- [Accessibility review request template](outreach/accessibility-review-request.md)
+
 ## Safety and Privacy
 
 AccessAid Lite is privacy-first:
