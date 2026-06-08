@@ -57,7 +57,7 @@ Future docs can help organizations ask practical questions after running the CLI
 Future docs can compare:
 
 - Automated preliminary check: fast static issue discovery.
-- Human review: task-based usability and assistive-technology review.
+- Human review: task based usability and assistive-technology review.
 - Full audit: structured standard-based review by qualified accessibility professionals.
 
 The comparison should avoid legal compliance claims and should keep the project positioned as a lightweight first pass.
