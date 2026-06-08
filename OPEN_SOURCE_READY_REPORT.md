@@ -68,6 +68,8 @@ OK
 
 Python version used locally: `Python 3.9.6`.
 
+Latest final validation: `2026-06-08T06:58:14Z`.
+
 ## 5. CLI Verification Results
 
 Passed.
@@ -96,8 +98,8 @@ Passed.
 
 ```text
 dist/accessaid-lite-0.1.0.zip
-size: 30K
-sha256: 28e0598bbb57e609e4ff8cbe0924e5c1711c8ac72c2f5265061883eb397c735d
+size: 31593 bytes
+sha256: 465d2335878e354b09c755b547a534f39890d985b819f221c8292057b506b483
 ```
 
 The zip includes project docs, CLI, config example, `.github/`, docs, examples, tests, and `package-release.sh`.
@@ -137,6 +139,7 @@ AccessAid Lite helps resource-limited organizations find common accessibility is
 
 ## 10. Next Steps
 
-- Publish the public GitHub repository.
-- Create tag and release.
-- Confirm GitHub Actions status after first push.
+- Review the GitHub-rendered docs.
+- Download the release ZIP and verify it opens cleanly.
+- Ask a human accessibility reviewer to sanity-check rule wording and limitations.
+- Keep the project clear that it is a preliminary check, not a full WCAG audit.
