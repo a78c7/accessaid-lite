@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "accessaid-lite"
+version = "0.1.0"
+description = "A lightweight, privacy-first accessibility pre-check CLI for small nonprofits, schools, community groups, and open-source projects."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "a78c7" }]
+keywords = ["accessibility", "wcag", "nonprofit", "cli", "python"]
+dependencies = []
+
+[project.scripts]
+accessaid-lite = "accessaid_lite:main"
+
+[tool.setuptools]
+py-modules = ["accessaid_lite"]

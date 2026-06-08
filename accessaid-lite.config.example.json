@@ -1,0 +1,13 @@
+{
+  "max_title_length": 80,
+  "allow_empty_alt": true,
+  "block_missing_img_alt": true,
+  "block_unlabeled_form_controls": true,
+  "warn_multiple_h1": true,
+  "warn_heading_skip": true,
+  "warn_generic_link_text": true,
+  "warn_positive_tabindex": true,
+  "ignore_hidden_inputs": true,
+  "timeout_seconds": 20,
+  "max_html_bytes": 2000000
+}
