@@ -2,13 +2,13 @@
 
 ## Timestamp
 
-2026-06-09 09:55:00 CST
+2026-06-09 10:27:30 CST
 
 ## 1. Repo URL
 
 https://github.com/a78c7/accessaid-lite
 
-## 2. Target Release URL
+## 2. Release URL
 
 https://github.com/a78c7/accessaid-lite/releases/tag/v0.1.2
 
@@ -18,7 +18,13 @@ https://github.com/a78c7/accessaid-lite/releases/tag/v0.1.2
 0.1.2
 ```
 
-## 4. Baseline Tags
+## 4. Commit And Tag
+
+v0.1.2 release commit and tag commit:
+
+```text
+5380532e00c9840587d4cb6d36fbee6bf53fcae0
+```
 
 `v0.1.0` remained unchanged:
 
@@ -31,6 +37,8 @@ d4b4c8b6d0879ac32187c9a001107603c400fc0c
 ```text
 2e22592cd36805a6e5ee8496964160ace6053b53
 ```
+
+This final report update is committed after the release. The `v0.1.2` tag is not moved after report-only updates.
 
 ## 5. v0.1.2 Scope
 
@@ -49,7 +57,7 @@ Not implemented:
 
 ## 6. Tests Result
 
-Local validation:
+Local validation passed:
 
 ```text
 python3 -m unittest discover -s tests
@@ -57,26 +65,72 @@ Ran 38 tests
 OK
 ```
 
-## 7. Package Asset
-
-Local package:
+Downloaded release ZIP validation also passed from:
 
 ```text
-dist/accessaid-lite-0.1.2.zip
+/tmp/accessaid-lite-v0.1.2-release-check/unzipped
 ```
 
-Final release asset size, digest, and downloaded ZIP verification are recorded after release creation.
+## 7. GitHub Actions Status
 
-## 8. Security Scan Result
+Passed.
 
-Passed checks:
+Main run:
+
+```text
+https://github.com/a78c7/accessaid-lite/actions/runs/27179852481
+commit: 5380532e00c9840587d4cb6d36fbee6bf53fcae0
+status: success
+```
+
+Tag run:
+
+```text
+https://github.com/a78c7/accessaid-lite/actions/runs/27179950768
+commit: 5380532e00c9840587d4cb6d36fbee6bf53fcae0
+status: success
+```
+
+## 8. Package Asset
+
+Uploaded release asset:
+
+```text
+accessaid-lite-0.1.2.zip
+```
+
+Asset URL:
+
+```text
+https://github.com/a78c7/accessaid-lite/releases/download/v0.1.2/accessaid-lite-0.1.2.zip
+```
+
+Asset metadata:
+
+- Size: `58494` bytes
+- Digest: `sha256:e6b3dd578f32bbbaf8b03bccb6a2f6469536f37a3ed22b704e228ee468f44bd5`
+- State: `uploaded`
+
+Downloaded ZIP verification:
+
+```text
+sha256: e6b3dd578f32bbbaf8b03bccb6a2f6469536f37a3ed22b704e228ee468f44bd5
+tests: Ran 38 tests, OK
+smoke checks: pass
+ZIP sensitive path scan: pass
+extracted sensitive path scan: pass
+```
+
+## 9. Security Scan Result
+
+Passed.
 
 - No tracked sensitive filename matches.
 - No high-confidence secret pattern matches.
 - No `.github/FUNDING.yml`.
-- No unwanted sensitive paths in the local release ZIP.
+- No unwanted sensitive paths in local or downloaded release ZIPs.
 
-## 9. Boundary Confirmations
+## 10. Boundary Confirmations
 
 - KYC/payment/withdrawal/tax handled: no
 - Sponsors enabled: no
@@ -90,12 +144,8 @@ Passed checks:
 - full WCAG audit/legal compliance claimed: no
 - human review required: yes
 
-## 10. Finalization
+## 11. Next Steps
 
-This report is updated again after:
-
-1. Commit and push.
-2. `v0.1.2` tag creation.
-3. GitHub Release creation.
-4. Downloaded ZIP verification from `/tmp`.
-5. GitHub Actions verification.
+- Review GitHub-rendered README and docs manually.
+- Review issue #1 for a future v0.1.3 location-hints pass.
+- Ask a human accessibility reviewer to sanity-check remediation wording, severity assumptions, and false-positive guidance.
