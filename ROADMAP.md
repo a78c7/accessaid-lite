@@ -29,6 +29,20 @@ AccessAid Lite is not a full WCAG audit. Automated checks cannot determine all a
 - Add a short maintainer guide for evaluating new rules.
 - Review GitHub Actions Node runtime warnings and update actions versions if needed.
 
+## v0.1.2 Triage
+
+v0.1.2 planning issues have been assigned to the `v0.1.2` milestone with priority labels.
+
+See [planning/v0.1.2/TRIAGE.md](planning/v0.1.2/TRIAGE.md) for:
+
+- milestone URL
+- issue priority summary
+- recommended implementation order
+- suggested first issue
+- safety boundaries
+
+This planning pass did not create a release or tag, and it did not change product code.
+
 ## Adoption Readiness Completed After v0.1.1
 
 - Added public presentation QA.
@@ -48,7 +62,7 @@ AccessAid Lite is not a full WCAG audit. Automated checks cannot determine all a
 - [Human review workflow](planning/v0.1.2/issue-human-review-workflow.md)
 - [Nonprofit example pack](planning/v0.1.2/issue-nonprofit-example-pack.md)
 
-These are future-work drafts only. They are not a release, not GitHub issues, and not a commitment to expand AccessAid Lite into a full WCAG audit.
+These are future-work planning items only. They are not a release and not a commitment to expand AccessAid Lite into a full WCAG audit. See [planning/v0.1.2/TRIAGE.md](planning/v0.1.2/TRIAGE.md) for the GitHub issue mapping.
 
 ## v0.1.1 Must Not Do
 
