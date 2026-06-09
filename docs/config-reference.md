@@ -58,6 +58,30 @@ Allowed override severities:
 - `warning`
 - `info`
 
-Unknown rule IDs and invalid severity values are ignored. Overrides do not hide findings in v0.1.1. They also do not make a page compliant or replace human review.
+Unknown rule IDs and invalid severity values are ignored. Overrides do not hide findings in v0.1.2. They also do not make a page compliant or replace human review.
 
 Use overrides only when your organization has a documented triage policy. This tool is still a preliminary check, not a full WCAG audit or legal compliance tool.
+
+## Override Examples
+
+Downgrade a rule only when a human reviewer has confirmed the local context:
+
+```json
+{
+  "severity_overrides": {
+    "img_alt_missing": "warning"
+  }
+}
+```
+
+Promote a rule when your team wants stricter review:
+
+```json
+{
+  "severity_overrides": {
+    "iframe_title_missing": "blocker"
+  }
+}
+```
+
+Keep overrides narrow. Prefer one rule at a time, document why it changed, and re-check the decision when page templates or user tasks change.

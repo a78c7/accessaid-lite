@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.1.2 - 2026-06-09
+
+Quality release focused on safer remediation wording, false-positive guidance, human-review workflow, and local examples.
+
+### Added
+
+- Added parser edge-case tests for malformed HTML, mixed-case tags/attributes, and wrapped labels.
+- Added local nonprofit, school, and community example pages.
+- Added documentation for common false positives and context-dependent findings.
+- Added expanded severity override examples and cautions.
+- Added `RELEASE_V0.1.2_REPORT.md`.
+
+### Improved
+
+- Improved remediation text for every rule to be more concrete, beginner-friendly, and conservative.
+- Improved human review checklist with false-positive review steps.
+- Improved automated-vs-human-review documentation.
+- Improved accessibility boundary documentation to explain incomplete findings and false positives.
+- Updated release packaging to create `dist/accessaid-lite-0.1.2.zip`.
+
+### Safety Notes
+
+- This is still a preliminary accessibility check, not a full WCAG audit.
+- Human review is still required.
+- No analytics, external APIs, cookies, keychain access, password manager access, login, JavaScript execution, form submission, payment, KYC, withdrawal, or tax handling.
+
 ## v0.1.1 - 2026-06-08
 
 Quality release focused on clearer reports and practical follow-up.

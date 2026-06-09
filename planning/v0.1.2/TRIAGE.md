@@ -71,10 +71,10 @@ v0.1.2 planning must preserve these boundaries:
 
 ## Release And Tag Note
 
-This triage pass changed planning metadata only.
+This triage pass changed planning metadata only. The later v0.1.2 implementation completed issues #2, #3, #4, #5, #6, and #7.
 
-- No product code was written.
-- No release was created.
-- No tag was created.
+- Product code was changed only for v0.1.2 remediation wording and parser-test-supported behavior verification.
+- v0.1.2 release status is recorded in `RELEASE_V0.1.2_REPORT.md` after implementation and validation.
 - `v0.1.0` was not modified.
 - `v0.1.1` was not modified.
+- Issue #1 was not implemented and remains open for v0.1.3.

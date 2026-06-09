@@ -44,5 +44,6 @@
 - This is a preliminary accessibility check, not a full WCAG audit.
 - Automated checks cannot determine all accessibility issues.
 - Human review is still required before making accessibility or compliance claims.
-- Review empty image alt text to confirm the image is decorative.
+- Some findings may be incomplete or context-dependent; review likely false positives before changing content.
+- Review empty image alt text with the page owner or a human reviewer to confirm the image is decorative.
 - Keyboard, focus order, color contrast, screen reader behavior, and dynamic JavaScript states require manual testing.

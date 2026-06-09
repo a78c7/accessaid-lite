@@ -34,6 +34,19 @@ Small organizations often lack budget or staff for formal accessibility audits. 
 - Unit tests and CI workflow.
 - Release packaging script.
 
+## v0.1.2 Release Notes
+
+Version `0.1.2` improves safety and adoption quality without changing the privacy-first scope.
+
+Highlights:
+
+- Safer, more concrete remediation wording for every rule.
+- Better documentation for false positives and context-dependent findings.
+- Expanded human review workflow guidance.
+- Parser edge-case tests for malformed HTML, mixed-case attributes, and wrapped labels.
+- More local nonprofit, school, and community example pages.
+- Clearer severity override examples and cautions.
+
 ## v0.1.1 Release Notes
 
 Version `0.1.1` improves report usefulness without changing the privacy-first scope.

@@ -6,15 +6,15 @@ It helps teams find common HTML accessibility issues early, before they ask a de
 
 AccessAid Lite is not a full WCAG audit. Automated checks cannot determine all accessibility issues. Human review is still required.
 
-## v0.1.1 Improvements
+## v0.1.2 Improvements
 
-- Stable `rule_id` values for every finding.
-- Line, column, and short element hints when the parser can identify them.
-- Remediation guidance on every finding.
-- Configurable severity overrides that can move a finding between `blocker`, `warning`, and `info`.
-- Markdown reports with a severity summary table.
-- JSON findings with `rule_id`, `severity`, `message`, `remediation`, `location`, and `element` fields.
-- Clearer URL fetch errors while keeping URL mode privacy-first.
+- Safer, more concrete remediation wording for non-specialist maintainers.
+- Clearer false-positive and human-review guidance.
+- More parser edge-case tests for malformed HTML, mixed-case attributes, and wrapped labels.
+- More local nonprofit, school, and community example pages.
+- Severity override docs that emphasize triage without hiding findings or proving compliance.
+
+v0.1.1 also added stable `rule_id` values, parser location hints, remediation fields, severity overrides, Markdown summary tables, and richer JSON findings.
 
 ## Who It Helps
 
@@ -72,6 +72,14 @@ Use severity overrides:
 
 ```bash
 python3 accessaid_lite.py check --html examples/missing-alt.html --config examples/severity-overrides.config.json --format json
+```
+
+Try local nonprofit and school examples:
+
+```bash
+python3 accessaid_lite.py check --html examples/nonprofit-donation-info.html
+python3 accessaid_lite.py check --html examples/school-program-page.html
+python3 accessaid_lite.py check --html examples/community-event-page.html
 ```
 
 Check a public URL:
@@ -159,6 +167,8 @@ Each check has a stable rule ID. See [docs/checks-reference.md](docs/checks-refe
 This is a preliminary accessibility check, not a full WCAG audit.
 
 Automated checks cannot determine all accessibility issues. AccessAid Lite can flag likely problems, but a human still needs to review page purpose, content quality, interaction behavior, color, focus order, assistive technology output, and user impact.
+
+Some findings can be false positives or context-dependent. Do not change content only to silence a rule; review the actual user task first.
 
 ## Nonprofit Workflow
 

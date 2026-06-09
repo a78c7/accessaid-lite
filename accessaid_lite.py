@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 DISCLAIMER = "This is a preliminary accessibility check, not a full WCAG audit."
 
 DEFAULT_CONFIG: Dict[str, Any] = {
@@ -345,7 +345,8 @@ def analyze_html(html: str, source: str = "text", config: Optional[Dict[str, Any
         DISCLAIMER,
         "Automated checks cannot determine all accessibility issues.",
         "Human review is still required before making accessibility or compliance claims.",
-        "Review empty image alt text to confirm the image is decorative.",
+        "Some findings may be incomplete or context-dependent; review likely false positives before changing content.",
+        "Review empty image alt text with the page owner or a human reviewer to confirm the image is decorative.",
         "Keyboard, focus order, color contrast, screen reader behavior, and dynamic JavaScript states require manual testing.",
     ]
     return {
@@ -366,7 +367,7 @@ def check_title(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                 "blocker",
                 "page_title_missing",
                 "The page does not include a <title> element.",
-                "Add a concise, descriptive <title> element.",
+                "Add a short, specific <title> that identifies the page purpose for browser tabs and assistive technology.",
             )
         )
         return
@@ -377,7 +378,7 @@ def check_title(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                 "blocker",
                 "page_title_empty",
                 "The page title is empty.",
-                "Use a concise title that identifies the page purpose.",
+                "Replace the empty title with a short, specific title that identifies the page purpose.",
             )
         )
     elif len(title) > int(cfg["max_title_length"]):
@@ -386,7 +387,7 @@ def check_title(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                 "warning",
                 "page_title_too_long",
                 f"The page title is longer than {cfg['max_title_length']} characters.",
-                "Shorten the title so it is easier to scan in browser tabs and assistive technology.",
+                "Consider shortening the title so people can scan it more easily in browser tabs and assistive technology.",
             )
         )
 
@@ -398,7 +399,7 @@ def check_language(page: ParsedPage, add) -> None:
                 "warning",
                 "html_lang_missing",
                 "The document does not include an <html> element.",
-                "Add <html lang=\"...\"> with the primary page language.",
+                "Add an <html> element with lang set to the primary page language, then confirm the language code with a human reviewer if unsure.",
             )
         )
     elif not clean_attr(page.html_lang):
@@ -407,7 +408,7 @@ def check_language(page: ParsedPage, add) -> None:
                 "warning",
                 "html_lang_empty",
                 "The <html> element is missing a non-empty lang attribute.",
-                "Set lang to the primary page language, such as en or zh-CN.",
+                "Set lang to the primary page language, such as en or zh-CN, and review pages with mixed languages manually.",
             )
         )
 
@@ -421,7 +422,7 @@ def check_images(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                     severity,
                     "img_alt_missing",
                     "An <img> element is missing an alt attribute.",
-                    "Add an alt attribute. Use meaningful text for informative images, or alt=\"\" only for decorative images.",
+                    "Review the image purpose. Add alt text for meaningful images, or use alt=\"\" only when a human reviewer confirms the image is decorative.",
                     image,
                 )
             )
@@ -431,7 +432,7 @@ def check_images(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                     "info",
                     "img_alt_empty",
                     "An image uses empty alt text and should be manually confirmed as decorative.",
-                    "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+                    "Confirm the image is decorative. If it conveys information, replace alt=\"\" with concise text that communicates the same purpose.",
                     image,
                 )
             )
@@ -444,7 +445,7 @@ def check_headings(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                 "warning",
                 "headings_missing",
                 "The page has no heading elements.",
-                "Add headings to describe page sections and support navigation.",
+                "Add clear headings for important page sections when the page has structured content; ask a human reviewer if a very short page truly needs headings.",
             )
         )
         return
@@ -456,7 +457,7 @@ def check_headings(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                 "warning",
                 "h1_missing",
                 "The page does not include an h1 heading.",
-                "Add one h1 that describes the main page topic.",
+                "Consider adding one clear h1 that describes the main page topic and helps visitors orient themselves.",
             )
         )
     elif h1_count > 1 and cfg.get("warn_multiple_h1", True):
@@ -465,7 +466,7 @@ def check_headings(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                 "warning",
                 "multiple_h1",
                 "The page includes multiple h1 headings.",
-                "Confirm the heading outline is intentional and easy to navigate.",
+                "Review the heading outline with a human reviewer and confirm multiple h1 headings are intentional and easy to navigate.",
             )
         )
 
@@ -479,7 +480,7 @@ def check_headings(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                         "warning",
                         "heading_level_skip",
                         f"Heading level jumps from h{previous_level} to h{current_level}.",
-                        "Avoid skipping heading levels when moving into subsections.",
+                        "Review the content outline. Use the next heading level when entering subsections unless the skip is intentional and still understandable.",
                         heading,
                     )
                 )
@@ -496,7 +497,7 @@ def check_links(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                     "warning",
                     "link_empty_text",
                     "A link has no readable text, aria-label, or title.",
-                    "Give every link text that explains its destination or action.",
+                    "Add visible link text or an accessible name that explains the destination or action.",
                     link,
                 )
             )
@@ -506,7 +507,7 @@ def check_links(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                     "warning",
                     "link_generic_text",
                     f"Link text '{text}' is generic.",
-                    "Replace generic link text with text that describes the destination or action.",
+                    "Replace generic text with wording that describes the destination or action, such as the document or page name.",
                     link,
                 )
             )
@@ -516,7 +517,7 @@ def check_links(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                     "warning",
                     "link_empty_href",
                     "A link has an empty or placeholder href.",
-                    "Use a meaningful href or replace the link with a button when it triggers an action.",
+                    "Use a real destination for navigation links, or replace action-only placeholders with a button and test keyboard behavior manually.",
                     link,
                 )
             )
@@ -531,7 +532,7 @@ def check_buttons(page: ParsedPage, add) -> None:
                     "blocker",
                     "button_missing_accessible_text",
                     "A <button> has no visible text, aria-label, or title.",
-                    "Add button text or an accessible label that describes the action.",
+                    "Add visible button text when possible, or provide a clear accessible label that describes the action.",
                     button,
                 )
             )
@@ -560,7 +561,7 @@ def check_form_labels(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                     severity,
                     "form_control_missing_label",
                     f"A <{control.tag}> control does not appear to have an associated label.",
-                    "Add a visible label connected with for/id, or provide aria-label/aria-labelledby when a visible label is not possible.",
+                    "Add a visible label connected with for/id when possible. Use aria-label or aria-labelledby only when a visible label is not practical, and confirm the field purpose manually.",
                     control,
                 )
             )
@@ -574,7 +575,7 @@ def check_iframes(page: ParsedPage, add) -> None:
                     "warning",
                     "iframe_title_missing",
                     "An <iframe> is missing a title attribute.",
-                    "Add a title that describes the embedded content.",
+                    "Add a concise title that describes the embedded content, such as map, video, calendar, or form.",
                     iframe,
                 )
             )
@@ -587,7 +588,7 @@ def check_landmarks(page: ParsedPage, add) -> None:
                 "warning",
                 "main_landmark_missing",
                 "The page does not include a main landmark.",
-                "Add <main> or role=\"main\" around the primary content.",
+                "Add <main> or role=\"main\" around the primary content so visitors can identify the main page region.",
             )
         )
     for tag in ("header", "nav", "footer"):
@@ -597,7 +598,7 @@ def check_landmarks(page: ParsedPage, add) -> None:
                     "warning",
                     "supporting_landmark_missing",
                     f"The page does not include a {tag} landmark.",
-                    f"Consider adding a <{tag}> landmark if this page has {tag}-type content.",
+                    f"Consider adding a <{tag}> landmark when the page has {tag}-type content; review simple pages manually before adding extra structure.",
                 )
             )
 
@@ -610,7 +611,7 @@ def check_keyboard_hints(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                     "warning",
                     "positive_tabindex",
                     "An element uses tabindex greater than 0.",
-                    "Avoid positive tabindex because it can create confusing focus order.",
+                    "Avoid positive tabindex because it may create confusing focus order; test keyboard navigation manually after changes.",
                     record,
                 )
             )
@@ -620,7 +621,7 @@ def check_keyboard_hints(page: ParsedPage, cfg: Dict[str, Any], add) -> None:
                 "warning",
                 "onclick_noninteractive",
                 f"A non-link, non-button <{record.tag}> has an onclick handler.",
-                "Use a real button or link for interactive controls, then test keyboard access manually.",
+                "Use a real button or link for interactive controls when possible, then confirm keyboard access and focus behavior manually.",
                 record,
             )
         )
@@ -633,7 +634,7 @@ def check_aria_hints(page: ParsedPage, add) -> None:
                 "warning",
                 "aria_label_empty",
                 "An aria-label attribute is empty.",
-                "Remove the empty aria-label or provide meaningful accessible text.",
+                "Remove the empty aria-label or provide meaningful accessible text; confirm it does not hide useful visible text from assistive technology.",
                 record,
             )
         )
@@ -643,7 +644,7 @@ def check_aria_hints(page: ParsedPage, add) -> None:
                 "warning",
                 "role_button_without_tabindex",
                 "An element with role=\"button\" is missing tabindex.",
-                "Prefer a real <button>; otherwise make the custom control focusable and keyboard operable.",
+                "Prefer a real <button>. If a custom control is necessary, make it focusable and keyboard operable, then test it manually.",
                 record,
             )
         )
@@ -653,7 +654,7 @@ def check_aria_hints(page: ParsedPage, add) -> None:
                 "blocker",
                 "aria_hidden_on_body_or_main",
                 "aria-hidden=\"true\" is present on body/main content.",
-                "Do not hide the main document or primary content from assistive technology.",
+                "Remove aria-hidden from primary page content unless a human reviewer confirms the content is intentionally hidden from everyone.",
                 record,
             )
         )
@@ -667,7 +668,7 @@ def check_readability(page: ParsedPage, add) -> None:
                 "warning",
                 "low_text_content",
                 "The page has very little visible text.",
-                "Confirm users can understand the page without relying only on images or layout.",
+                "Confirm users can understand the page without relying only on images, layout, or visual context.",
             )
         )
     if page.images and text_length < 10:
@@ -676,7 +677,7 @@ def check_readability(page: ParsedPage, add) -> None:
                 "warning",
                 "image_heavy_without_text",
                 "The document appears to rely on images with almost no readable text.",
-                "Add meaningful text content and manually review image alternatives.",
+                "Add meaningful text for key information when appropriate, and manually review whether image alternatives communicate the page purpose.",
             )
         )
 

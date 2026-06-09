@@ -51,7 +51,17 @@ python3 accessaid_lite.py check --html examples/missing-alt.html --config exampl
 
 Severity overrides can move a rule to `blocker`, `warning`, or `info`. They do not hide findings and do not make a page compliant.
 
-## 7. Share Findings
+## 7. Try Local Organization Examples
+
+```bash
+python3 accessaid_lite.py check --html examples/nonprofit-donation-info.html
+python3 accessaid_lite.py check --html examples/school-program-page.html
+python3 accessaid_lite.py check --html examples/community-event-page.html
+```
+
+These are local static examples only. They do not include payment, login, private data, or form submission flows.
+
+## 8. Share Findings
 
 Send blockers and warnings to the website maintainer. Make clear that this is a preliminary accessibility check, not a full WCAG audit, and that human review is still required.
 

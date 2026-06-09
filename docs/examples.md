@@ -80,7 +80,7 @@ Markdown findings include approximate parser locations when available:
   "rule_id": "img_alt_missing",
   "severity": "blocker",
   "message": "An <img> element is missing an alt attribute.",
-  "remediation": "Add an alt attribute. Use meaningful text for informative images, or alt=\"\" only for decorative images.",
+  "remediation": "Review the image purpose. Add alt text for meaningful images, or use alt=\"\" only when a human reviewer confirms the image is decorative.",
   "location": {
     "line": 12,
     "column": 4,
@@ -97,3 +97,22 @@ python3 accessaid_lite.py check --html examples/missing-alt.html --config exampl
 ```
 
 Overrides can help local triage, but they do not hide findings and do not replace human review.
+
+Use overrides carefully:
+
+- Downgrade only after a human reviewer confirms the local context.
+- Promote when your organization wants stricter review.
+- Keep rule IDs narrow instead of changing broad categories.
+- Document the reason for each override in your project notes.
+
+## Nonprofit, School, And Community Examples
+
+These local pages are intentionally simple and use placeholder content only:
+
+```bash
+python3 accessaid_lite.py check --html examples/nonprofit-donation-info.html
+python3 accessaid_lite.py check --html examples/school-program-page.html
+python3 accessaid_lite.py check --html examples/community-event-page.html
+```
+
+They are for deterministic local testing and learning. They do not include payment, KYC, withdrawal, tax, login, private data, or form submission flows.

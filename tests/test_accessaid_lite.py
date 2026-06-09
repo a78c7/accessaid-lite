@@ -183,6 +183,34 @@ class AccessAidLiteTests(unittest.TestCase):
         report = analyze("<html lang='en'><head><title>Bad</title><body><main><h1>Bad")
         self.assertIn(report["result"], {"pass", "warning", "blocked"})
 
+    def test_unclosed_nested_html_does_not_crash(self):
+        report = analyze("""
+        <HTML LANG="en"><HEAD><TITLE>Broken nesting</TITLE></HEAD>
+        <BODY><MAIN><H1>Broken nesting</H1><section><p>Readable text
+        <img SRC="group.jpg" ALT="Community group meeting">
+        """)
+        self.assertIn(report["result"], {"pass", "warning", "blocked"})
+        self.assertFalse(any(item["rule_id"] == "img_alt_missing" for item in all_findings(report)))
+
+    def test_mixed_case_tags_and_attributes_are_normalized(self):
+        report = analyze("""
+        <HTML LANG="en"><HEAD><TITLE>Mixed Case</TITLE></HEAD><BODY>
+        <HEADER><H1>Mixed Case</H1></HEADER>
+        <NAV><A HREF="/help">Help page</A></NAV>
+        <MAIN><IMG SRC="team.jpg" ALT="Volunteer team"><BUTTON TYPE="button">Open</BUTTON></MAIN>
+        <FOOTER>Footer text</FOOTER></BODY></HTML>
+        """)
+        self.assertEqual(report["summary"]["language"], "en")
+        self.assertFalse(any(item["rule_id"] == "img_alt_missing" for item in all_findings(report)))
+
+    def test_nested_label_satisfies_form_control(self):
+        report = analyze("""
+        <html lang="en"><head><title>Wrapped label</title></head><body><header><h1>Wrapped label</h1></header>
+        <nav><a href="/help">Help page</a></nav><main><form><label>Email <input type="email" name="email"></label></form>
+        <p>Readable content for the page.</p></main><footer>Footer text</footer></body></html>
+        """)
+        self.assertFalse(any(item["rule_id"] == "form_control_missing_label" for item in all_findings(report)))
+
     def test_empty_aria_label_is_reported(self):
         report = analyze("""
         <html lang="en"><head><title>ARIA</title></head><body><header><h1>ARIA</h1></header>
@@ -240,6 +268,23 @@ class AccessAidLiteTests(unittest.TestCase):
         report = analyze("<html lang='en'><head><title>x</title></head><body><main><input id='email' type='email'></main></body></html>")
         finding = next(item for item in all_findings(report) if item["rule_id"] == "form_control_missing_label")
         self.assertIn("input#email", finding["element"])
+
+    def test_nonprofit_example_passes(self):
+        html = (ROOT / "examples" / "nonprofit-donation-info.html").read_text(encoding="utf-8")
+        report = analyze(html)
+        self.assertEqual(report["result"], "pass")
+
+    def test_school_program_example_warns_on_iframe_title(self):
+        html = (ROOT / "examples" / "school-program-page.html").read_text(encoding="utf-8")
+        report = analyze(html)
+        self.assertEqual(report["result"], "warning")
+        self.assert_has_rule(report, "iframe_title_missing", "warnings")
+
+    def test_community_event_example_warns_on_generic_link(self):
+        html = (ROOT / "examples" / "community-event-page.html").read_text(encoding="utf-8")
+        report = analyze(html)
+        self.assertEqual(report["result"], "warning")
+        self.assert_has_rule(report, "link_generic_text", "warnings")
 
 
 if __name__ == "__main__":

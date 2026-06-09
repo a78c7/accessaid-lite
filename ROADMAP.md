@@ -19,19 +19,21 @@ AccessAid Lite is not a full WCAG audit. Automated checks cannot determine all a
 - Keep the standard-library-only approach unless a strong reason exists.
 - Preserve privacy-first boundaries.
 
-## v0.1.2 Candidate Backlog
+## v0.1.2 Completed
 
-- Add optional SARIF-like JSON export without changing privacy boundaries.
-- Add more sample pages for donation, event registration, school program, and open-source docs pages.
-- Add clearer examples for empty alt text decisions.
-- Add stricter config validation messages while avoiding noise.
-- Add more tests for URL fetch errors with mocked standard-library handlers.
-- Add a short maintainer guide for evaluating new rules.
-- Review GitHub Actions Node runtime warnings and update actions versions if needed.
+- Improved remediation wording for clarity and safety.
+- Added false-positive and context-dependent finding guidance.
+- Expanded human review workflow documentation.
+- Added parser edge-case tests for malformed HTML, mixed-case attributes, and wrapped labels.
+- Expanded severity override docs and examples.
+- Added local nonprofit, school, and community example pages.
+- Kept privacy-first boundaries and did not turn the project into a full WCAG audit.
+
+Issue #1, line and element location hints, was intentionally left open for a future v0.1.3 pass because location behavior changes are better handled separately.
 
 ## v0.1.2 Triage
 
-v0.1.2 planning issues have been assigned to the `v0.1.2` milestone with priority labels.
+v0.1.2 planning issues were assigned to the `v0.1.2` milestone with priority labels.
 
 See [planning/v0.1.2/TRIAGE.md](planning/v0.1.2/TRIAGE.md) for:
 
@@ -41,7 +43,15 @@ See [planning/v0.1.2/TRIAGE.md](planning/v0.1.2/TRIAGE.md) for:
 - suggested first issue
 - safety boundaries
 
-This planning pass did not create a release or tag, and it did not change product code.
+The v0.1.2 implementation completed issues #2, #3, #4, #5, #6, and #7. Issue #1 remains open for future location-hint work.
+
+## Future v0.1.3 Candidates
+
+- Improve line and element location hints.
+- Add optional SARIF-like JSON export without changing privacy boundaries.
+- Add stricter config validation messages while avoiding noise.
+- Add more tests for URL fetch errors with mocked standard-library handlers.
+- Review GitHub Actions Node runtime warnings and update actions versions if needed.
 
 ## Adoption Readiness Completed After v0.1.1
 
@@ -64,18 +74,18 @@ This planning pass did not create a release or tag, and it did not change produc
 
 These are future-work planning items only. They are not a release and not a commitment to expand AccessAid Lite into a full WCAG audit. See [planning/v0.1.2/TRIAGE.md](planning/v0.1.2/TRIAGE.md) for the GitHub issue mapping.
 
-## v0.1.1 Must Not Do
+## v0.1.2 Must Not Do
 
-- v0.1.1 must not turn the project into a full WCAG audit.
-- v0.1.1 must not add analytics.
-- v0.1.1 must not upload user page content.
-- v0.1.1 must not read cookies, tokens, keychain, or password managers.
-- v0.1.1 must not login to websites.
-- v0.1.1 must not bypass authentication.
-- v0.1.1 must not execute JavaScript.
-- v0.1.1 must not submit forms.
-- v0.1.1 must not provide legal advice.
-- v0.1.1 must not provide medical advice.
+- v0.1.2 must not turn the project into a full WCAG audit.
+- v0.1.2 must not add analytics.
+- v0.1.2 must not upload user page content.
+- v0.1.2 must not read cookies, tokens, keychain, or password managers.
+- v0.1.2 must not login to websites.
+- v0.1.2 must not bypass authentication.
+- v0.1.2 must not execute JavaScript.
+- v0.1.2 must not submit forms.
+- v0.1.2 must not provide legal advice.
+- v0.1.2 must not provide medical advice.
 
 ## Practical Priorities
 

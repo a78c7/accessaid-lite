@@ -32,6 +32,20 @@ Human review is still required for:
 - Mobile and zoom behavior.
 - Real user needs.
 
+## False Positives And Incomplete Findings
+
+AccessAid Lite can report findings that need context. Some warnings may be false positives, and some real barriers may be missed.
+
+Examples:
+
+- An image with `alt=""` may be correct if it is decorative.
+- A heading warning may need review against the whole content outline.
+- A generic link warning may depend on surrounding text.
+- Keyboard and ARIA hints cannot confirm real interaction behavior because the tool does not execute JavaScript.
+- Color contrast, screen reader output, focus order, and dynamic error messages require manual testing.
+
+Use findings to guide review. Do not treat a pass as proof of accessibility or a warning as proof of failure.
+
 ## Privacy Boundary
 
 The tool analyzes only user-provided URL, HTML, or text. It does not upload page content, read cookies, read tokens, access keychains, access password managers, log in, bypass authentication, submit forms, collect analytics, or call external APIs.
