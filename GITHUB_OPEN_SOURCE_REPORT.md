@@ -2,7 +2,7 @@
 
 ## Timestamp
 
-2026-06-09 10:27:30 CST
+2026-06-09 10:31:42 CST
 
 ## 1. Repo URL
 
@@ -54,6 +54,16 @@ Implemented:
 Not implemented:
 
 - Issue #1: line and element location hints. This remains open for v0.1.3.
+
+Issue closure status:
+
+- #2 closed: https://github.com/a78c7/accessaid-lite/issues/2
+- #3 closed: https://github.com/a78c7/accessaid-lite/issues/3
+- #4 closed: https://github.com/a78c7/accessaid-lite/issues/4
+- #5 closed: https://github.com/a78c7/accessaid-lite/issues/5
+- #6 closed: https://github.com/a78c7/accessaid-lite/issues/6
+- #7 closed: https://github.com/a78c7/accessaid-lite/issues/7
+- #1 open: https://github.com/a78c7/accessaid-lite/issues/1
 
 ## 6. Tests Result
 

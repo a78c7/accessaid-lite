@@ -146,18 +146,18 @@ Passed:
 
 ## Issue Status
 
-Completed and ready to close:
+Closed after v0.1.2 release:
 
-- #2 Review rule remediation wording for clarity and safety
-- #3 Improve severity override documentation and examples
-- #4 Review common false positives and noisy findings
-- #5 Add tests for HTML parser edge cases
-- #6 Improve human review workflow guidance
-- #7 Add more nonprofit and school example pages
+- #2 Review rule remediation wording for clarity and safety: https://github.com/a78c7/accessaid-lite/issues/2
+- #3 Improve severity override documentation and examples: https://github.com/a78c7/accessaid-lite/issues/3
+- #4 Review common false positives and noisy findings: https://github.com/a78c7/accessaid-lite/issues/4
+- #5 Add tests for HTML parser edge cases: https://github.com/a78c7/accessaid-lite/issues/5
+- #6 Improve human review workflow guidance: https://github.com/a78c7/accessaid-lite/issues/6
+- #7 Add more nonprofit and school example pages: https://github.com/a78c7/accessaid-lite/issues/7
 
-Still open:
+Still open for v0.1.3 or later:
 
-- #1 Improve line and element location hints
+- #1 Improve line and element location hints: https://github.com/a78c7/accessaid-lite/issues/1
 
 ## Remaining Manual Checks
 
