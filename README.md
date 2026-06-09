@@ -172,6 +172,7 @@ Automated checks cannot determine all accessibility issues. AccessAid Lite can f
 ## Adoption Materials
 
 - [Real-world pilot guide](docs/real-world-pilot-guide.md)
+- [W3C WAI pilot summary](pilot-reports/PILOT_SUMMARY.md)
 - [Maintainer triage guide](docs/maintainer-triage-guide.md)
 - [Launch post template](outreach/launch-post.md)
 - [Nonprofit email template](outreach/nonprofit-email.md)

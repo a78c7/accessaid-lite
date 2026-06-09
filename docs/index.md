@@ -8,6 +8,7 @@
 - [Human Review Checklist](human-review-checklist.md)
 - [Automated Vs Human Review](automated-vs-human-review.md)
 - [Real-World Pilot Guide](real-world-pilot-guide.md)
+- [W3C WAI Pilot Summary](../pilot-reports/PILOT_SUMMARY.md)
 - [Maintainer Triage Guide](maintainer-triage-guide.md)
 
 AccessAid Lite is a preliminary accessibility check, not a full WCAG audit. Human review is still required.

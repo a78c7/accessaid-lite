@@ -6,6 +6,8 @@ This guide helps a small nonprofit, school, community group, or open-source main
 
 Use it as a practical first pass. It is not a full WCAG audit, not legal advice, and not medical advice. Human review is still required before making accessibility or compliance claims.
 
+See the local W3C WAI pilot summary: [pilot-reports/PILOT_SUMMARY.md](../pilot-reports/PILOT_SUMMARY.md).
+
 ## 2. Choose Pilot Pages
 
 Start with one or two public pages that matter to real visitors:

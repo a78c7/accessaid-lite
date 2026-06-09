@@ -1,0 +1,135 @@
+{
+  "result": "blocked",
+  "exit_code": 2,
+  "summary": {
+    "source": "https://www.w3.org/WAI/",
+    "title": "Home | Web Accessibility Initiative (WAI) | W3C W3C homepage Web Accessibility Initiative (WAI) homepage",
+    "language": "en",
+    "images": 6,
+    "links": 75,
+    "forms": 1,
+    "headings": 19,
+    "buttons": 3,
+    "iframes": 1,
+    "visible_text_characters": 6615
+  },
+  "blockers": [
+    {
+      "rule_id": "button_missing_accessible_text",
+      "severity": "blocker",
+      "message": "A <button> has no visible text, aria-label, or title.",
+      "remediation": "Add button text or an accessible label that describes the action.",
+      "rule": "button_missing_accessible_text",
+      "help": "Add button text or an accessible label that describes the action.",
+      "location": {
+        "line": 97,
+        "column": 14,
+        "element": "button"
+      },
+      "element": "<button>"
+    }
+  ],
+  "warnings": [
+    {
+      "rule_id": "page_title_too_long",
+      "severity": "warning",
+      "message": "The page title is longer than 80 characters.",
+      "remediation": "Shorten the title so it is easier to scan in browser tabs and assistive technology.",
+      "rule": "page_title_too_long",
+      "help": "Shorten the title so it is easier to scan in browser tabs and assistive technology."
+    }
+  ],
+  "info": [
+    {
+      "rule_id": "img_alt_empty",
+      "severity": "info",
+      "message": "An image uses empty alt text and should be manually confirmed as decorative.",
+      "remediation": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "rule": "img_alt_empty",
+      "help": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "location": {
+        "line": 244,
+        "column": 8,
+        "element": "img"
+      },
+      "element": "<img src=\"/WAI/content-images/news/2019-12-03-w3cx-accessibility-intro.jpg\">"
+    },
+    {
+      "rule_id": "img_alt_empty",
+      "severity": "info",
+      "message": "An image uses empty alt text and should be manually confirmed as decorative.",
+      "remediation": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "rule": "img_alt_empty",
+      "help": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "location": {
+        "line": 285,
+        "column": 8,
+        "element": "img"
+      },
+      "element": "<img src=\"/WAI/content-images/news/2019-09-10-making-audio-and-video-media-accessible.png\">"
+    },
+    {
+      "rule_id": "img_alt_empty",
+      "severity": "info",
+      "message": "An image uses empty alt text and should be manually confirmed as decorative.",
+      "remediation": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "rule": "img_alt_empty",
+      "help": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "location": {
+        "line": 337,
+        "column": 12,
+        "element": "img"
+      },
+      "element": "<img src=\"/WAI/assets/images/email.svg\">"
+    },
+    {
+      "rule_id": "img_alt_empty",
+      "severity": "info",
+      "message": "An image uses empty alt text and should be manually confirmed as decorative.",
+      "remediation": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "rule": "img_alt_empty",
+      "help": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "location": {
+        "line": 341,
+        "column": 12,
+        "element": "img"
+      },
+      "element": "<img src=\"/WAI/assets/images/social/linkedin.svg\">"
+    },
+    {
+      "rule_id": "img_alt_empty",
+      "severity": "info",
+      "message": "An image uses empty alt text and should be manually confirmed as decorative.",
+      "remediation": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "rule": "img_alt_empty",
+      "help": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "location": {
+        "line": 345,
+        "column": 12,
+        "element": "img"
+      },
+      "element": "<img src=\"https://www.w3.org/assets/website-2021/svg/mastodon.svg\">"
+    },
+    {
+      "rule_id": "img_alt_empty",
+      "severity": "info",
+      "message": "An image uses empty alt text and should be manually confirmed as decorative.",
+      "remediation": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "rule": "img_alt_empty",
+      "help": "If the image conveys meaning, replace alt=\"\" with concise descriptive text.",
+      "location": {
+        "line": 349,
+        "column": 12,
+        "element": "img"
+      },
+      "element": "<img src=\"/WAI/assets/images/social/youtube.svg\">"
+    }
+  ],
+  "human_review_notes": [
+    "This is a preliminary accessibility check, not a full WCAG audit.",
+    "Automated checks cannot determine all accessibility issues.",
+    "Human review is still required before making accessibility or compliance claims.",
+    "Review empty image alt text to confirm the image is decorative.",
+    "Keyboard, focus order, color contrast, screen reader behavior, and dynamic JavaScript states require manual testing."
+  ]
+}
